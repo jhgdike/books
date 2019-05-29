@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 
+from books.common.local_cache.hit_count import counter_view, cached
 from books.common.response import json_success
 from books.source.api.books import get_book_list, get_book_chapter_detail, get_book_chapter_list
 
@@ -20,5 +21,11 @@ def book_chapter_list(book_id):
 
 
 @bp.route('/<int:book_id>/chapter/<int:chapter_id>/')
+@counter_view
 def book_chapter(book_id, chapter_id):
     return json_success(get_book_chapter_detail(book_id, chapter_id))
+
+
+@bp.route('/local/')
+def local_hit():
+    return json_success(cached)
